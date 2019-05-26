@@ -1,0 +1,23 @@
+{
+  "lang": "en",
+  "short_name": "Readable",
+  "name": "Readable - FDOORS",
+  "description": "This is a second project to Udacity react nanodegree - by Fernando Silva (FDOORS)",
+  "icons": [
+    {
+      "src": "./assets/image/Fdoors.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/image/Fdoors.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "theme_color": "#5FA6ED",
+  "background_color": "#ffffff"
+}
