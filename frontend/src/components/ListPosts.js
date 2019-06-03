@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Select, Modal, Row } from 'antd';
+import { Modal } from 'antd';
 import { connect } from 'react-redux'
 import CardView from './CardView'
-import { handleVotePost, handleDeletePost, handleOrderPost } from '../actions/posts';
+import { handleVotePost, handleDeletePost } from '../actions/posts';
 import { handlePostComment, handleDeleteComment, handleVoteComment } from '../actions/comments';
 
-const Option = Select.Option
 const confirm = Modal.confirm;
 
 
@@ -18,7 +17,7 @@ class ListPosts extends Component {
     this.props.getComments(id)
   }
 
-  setVote = async (id, params, isComment = false) => {
+  setVote = (id, params, isComment = false) => {
     if (isComment) return this.props.voteComments(id, { "option": params })
     this.props.votePost(id, { "option": params })
   }
@@ -37,23 +36,11 @@ class ListPosts extends Component {
   render() {
     return (
       <div className='centerPost'>
-        {!this.props.comments
-          && <Row>
-            <Select placeholder='Order by'
-              style={{ width: 120 }}
-              onChange={(opt) => this.props.orderPosts(opt)}
-            >
-              <Option value="date">Date</Option>
-              <Option value="more">More Vote</Option>
-              <Option value="less">Less Vote</Option>
-            </Select>
-          </Row>
-
-        }
+        
         {!this.props.posts && <h4>Comments</h4>}
         <ul style={{ padding: 0 }} >
           {!this.props.comments
-            ? Object.values(this.props.posts).map(post => (
+            ? this.props.posts.map(post => (
               <CardView
                 key={post.id}
                 post={post}
@@ -63,7 +50,7 @@ class ListPosts extends Component {
                 handleDeleteModal={(title, id) => this.handleDeleteModal(title, id, this.props.deletePost)}
                 style={{ width: '400px', margin: '15px 0' }}
               />))
-            : Object.values(this.props.comments).map(post => (
+            : this.props.comments.map(post => (
               <CardView
                 key={post.id}
                 post={post}
@@ -82,7 +69,6 @@ class ListPosts extends Component {
 const mapDispatchToProps = dispatch => {
   return {
     votePost: (id, params) => dispatch(handleVotePost(id, params)),
-    orderPosts: order => dispatch(handleOrderPost(order)),
     deletePost: id => dispatch(handleDeletePost(id)),
     getComments: id => dispatch(handlePostComment(id)),
     deleteComments: id => dispatch(handleDeleteComment(id)),

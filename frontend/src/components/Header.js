@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { capitalize } from '../services/utils';
 
 const Header = ({categories}) => {
     return (
@@ -10,8 +11,12 @@ const Header = ({categories}) => {
                 </section>
                 <section>
                     <Link className='menuCategory' to='/'>Home</Link>
-                    {Object.values(categories).map(category =>(
-                        <Link className='menuCategory' key={category.path} to={`/${category.name}`}>{category.name}</Link>
+                    {categories.map(category =>(
+                        <Link className='menuCategory' 
+                          key={category.path} 
+                          to={`/${category.name}`}>
+                            {capitalize(category.name)}
+                        </Link>
                     ))}
                 </section>
             </section>

@@ -75,7 +75,10 @@ a:hover {
   display: flex;
   justify-content: center;
 }
-
+.select-option{
+  display: flex;
+  justify-content: center;
+}
 .centerPost {
   margin: 0 auto;
   display: flex;

@@ -28,7 +28,7 @@ export const getPosts = () => {
 export const getPostById = (id) => {
   return fetch(`${API}/posts/${id}`, { headers })
     .then(res => res.json())
-    .then(data => data)
+    .then(data => Array(data))
 }
 
 export const createPosts = (params) => {
@@ -90,7 +90,7 @@ export const createComments = (params) => {
     body: JSON.stringify(params)
   })
     .then(res => res.json())
-    .then(data => data)
+    .then(data => Array(data))
 }
 export const getComments = (id) => {
   return fetch(`${API}/comments/${id}`, 

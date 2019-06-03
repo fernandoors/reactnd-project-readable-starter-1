@@ -23,3 +23,7 @@ export const formatComment = (body, parentId, id = generateUID()) => ({
   id,
   parentId
 })
+
+export const capitalize = (text) =>{
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}

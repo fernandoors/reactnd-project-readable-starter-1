@@ -59,7 +59,7 @@ export const loadComment = () => {
 export const handleSaveComment = (comment) => {
   return (dispatch, getState) => {
     const state = getState()
-    const isUpdate = Object.values(state.comments).filter(comments => comments.id.includes(comment.id))
+    const isUpdate = state.comments.filter(comments => comments.id.includes(comment.id))
     if (!!isUpdate.length) {
       return updateComments(comment.id, comment)
         .then(comment => dispatch(updateComment(comment)))
@@ -67,7 +67,7 @@ export const handleSaveComment = (comment) => {
     }
     createComments(comment)
       .then(comment => dispatch(saveComment(comment)))
-      .then(()=> dispatch(postComment(comment.parentId, true)))
+      .then(() => dispatch(postComment(comment.parentId, true)))
       .catch(error => console.error(error))
   }
 }
@@ -82,8 +82,10 @@ export const handleVoteComment = (id, params) => {
 export const handleDeleteComment = (id) => {
   return dispatch => {
     deleteComments(id)
-      .then(comment => dispatch(setDeleteComment(comment)))
-      .then(comment => dispatch(postComment(comment.parentId)))
+      .then(comment => {
+        dispatch(setDeleteComment(comment))
+        dispatch(postComment(comment.parentId))
+      })
       .then(getPosts().then(posts => dispatch(receivePosts(posts))))
   }
 }

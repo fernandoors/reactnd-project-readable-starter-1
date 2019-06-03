@@ -1,57 +1,51 @@
-import { RECEIVE_POSTS, ADD_POST, VOTE_POST, DELETE_POST, ORDER_POST, EDIT_POST, POST_COMMENT } from "../actions/posts";
+import { RECEIVE_POSTS, RECEIVE_POSTS_BY_ID, ADD_POST, VOTE_POST, DELETE_POST, ORDER_POST, EDIT_POST, POST_COMMENT } from "../actions/posts";
 let update = []
-export default function posts(state = {}, action) {
-  const filteredState = Object.values(state).map(post => post)
+export default function posts(state = [], action) {
   switch (action.type) {
     case RECEIVE_POSTS:
-      return {
-        ...state,
-        ...action.posts
-      }
+      return action.posts
+    case RECEIVE_POSTS_BY_ID:
+      return action.posts
     case ADD_POST:
-      return {
+      return [
         ...state,
-        [action.post.id]: action.post
-      }
+        action.post
+      ]
     case EDIT_POST:
-      update = (Object.values(state).map(post =>{
-        if(post.id=== action.post.id){
+      update = state.map(post => {
+        if (post.id === action.post.id) {
           return action.post
         }
         return post
-      }))
-      return {
+      })
+      return [
         ...update,
-      }
+      ]
     case POST_COMMENT:
-      update = (Object.values(state).map(post =>{
-        if(post.id=== action.id){
-          if(action.add) return {...post, commentCount: post.commentCount+1}
-          return {...post, commentCount: post.commentCount-1}
-        }
-        return post
-      }))
-      return {
-        ...update,
-      }
+      update = state.filter(post => post.id === action.id).map(result => {
+        if (action.add) result.commentCount = result.commentCount + 1
+        else result.commentCount = result.commentCount - 1
+        return result
+      })
+      return update
     case VOTE_POST:
-      return filteredState.map(post =>
+      return state.map(post =>
         (post.id === action.post.id)
-          ? { ...post, voteScore: action.post.voteScore }
+          ? action.post
           : post
       )
     case DELETE_POST:
-      return filteredState.filter(post =>
+      return state.filter(post =>
         post.id !== action.id
       )
     case ORDER_POST:
-      switch(action.order){
+      switch (action.order) {
         case 'date':
-          return Object.values(state).sort((a, b) => b.timestamp - a.timestamp)
+          return state.map(post => post).sort((a, b) => b.timestamp - a.timestamp)
         case 'more':
-          return Object.values(state).sort((a, b) => b.voteScore - a.voteScore)
+          return state.map(post => post).sort((a, b) => b.voteScore - a.voteScore)
         case 'less':
-          return Object.values(state).sort((a, b) => a.voteScore - b.voteScore)
+          return state.map(post => post).sort((a, b) => a.voteScore - b.voteScore)
         default:
           return state
       }
@@ -59,5 +53,3 @@ export default function posts(state = {}, action) {
       return state
   }
 }
-
-// export default posts

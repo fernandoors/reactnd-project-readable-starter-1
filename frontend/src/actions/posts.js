@@ -1,7 +1,8 @@
-import { getPosts, createPosts, votePosts, deletePosts, updatePosts } from "../services/API";
+import { getPosts, createPosts, votePosts, deletePosts, updatePosts, getPostById } from "../services/API";
 
 // CONSTANTS
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
+export const RECEIVE_POSTS_BY_ID = 'RECEIVE_POSTS_BY_ID'
 export const ADD_POST = 'ADD_POST'
 export const EDIT_POST = 'EDIT_POST'
 export const POST_COMMENT = 'POST_COMMENT'
@@ -13,6 +14,12 @@ export const ORDER_POST = 'ORDER_POST'
 export function receivePosts(posts) {
   return {
     type: RECEIVE_POSTS,
+    posts,
+  }
+}
+export function receivePostsById(posts) {
+  return {
+    type: RECEIVE_POSTS_BY_ID,
     posts,
   }
 }
@@ -58,16 +65,25 @@ export function handleOrderPost(order) {
 // THUNK
 export const loadPost = () => {
   return dispatch => {
-    getPosts().then(posts => dispatch(receivePosts(posts)))
+    getPosts()
+      .then(posts => dispatch(receivePosts(posts)))
+      .catch(error => console.error(error))
+  }
+}
+export const loadPostById = (id) => {
+  return dispatch => {
+    getPostById(id)
+      .then(posts => dispatch(receivePostsById(posts)))
+      .catch(error => console.error(error))
   }
 }
 
 export const handleSavePost = (post) => {
   return (dispatch, getState) => {
     const state = getState()
-    const isUpdate = Object.values(state.posts).filter(posts => posts.id.includes(post.id))
-    if(!!isUpdate.length){
-     return updatePosts(post.id, post)
+    const isUpdate = state.posts.filter(posts => posts.id.includes(post.id))
+    if (!!isUpdate.length) {
+      return updatePosts(post.id, post)
         .then(post => dispatch(updatePost(post)))
         .then(() => dispatch(handleOrderPost('date')))
         .catch(error => console.error(error))
@@ -83,6 +99,7 @@ export const handleVotePost = (id, params) => {
   return dispatch => {
     votePosts(id, params)
       .then(post => dispatch(setVotePost(post)))
+      .catch(error => console.error(error))
   }
 }
 
@@ -90,5 +107,6 @@ export const handleDeletePost = id => {
   return dispatch => {
     deletePosts(id)
       .then(post => dispatch(setDeletePost(post)))
+      .catch(error => console.error(error))
   }
 }

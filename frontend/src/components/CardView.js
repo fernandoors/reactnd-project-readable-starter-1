@@ -1,6 +1,6 @@
 import React from 'react'
 import { Icon, Card, Popover } from 'antd';
-import { formatDate } from '../services/utils';
+import { formatDate, capitalize } from '../services/utils';
 import { Link } from 'react-router-dom'
 
 export default function CardView(props) {
@@ -12,7 +12,17 @@ export default function CardView(props) {
     >
       {props.post.body}
       <br />
-      <Icon type='user' /> Author: {props.post.author} {props.post.category && <label>| <Icon type='align-left' />  <label>Category: <Link to={`/${props.post.category}`}> {props.post.category} </Link> </label></label>}
+      <Icon type='user' /> Author: {props.post.author}
+      {props.post.category &&
+        <label>
+          | <Icon type='align-left' />
+          <label>Category: 
+            <Link to={`/${props.post.category}`}>
+               {capitalize(props.post.category)}
+            </Link>
+          </label>
+        </label>
+      }
       <br />
       {formatDate(props.post.timestamp)}
       <br />
